@@ -16,5 +16,3 @@
     (let([head (car list)]
          [tail (cdr list)])
       (cons (* head head) (squares tail)))))
-
-(provide squares)
