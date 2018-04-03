@@ -35,12 +35,21 @@
         [else (ascending (cdr list))]))
 
 
+(define (let*->let-1 expression)
+  (let* ([variables (cadr expression)]
+        [modified-expression (cons (car expression) (cons (cdr variables) (cddr expression)))])
+    (cond [(null? variables) null]
+          [(eq? (length variables) 1) (cons 'let (cons (list (car variables)) (let*->let-1 modified-expression)))]
+          [else (list 'let (list (car variables)) (let*->let-1 modified-expression))])))
+
 (define (let*->let expression)
-  (let ([variables (cadr expression)]
-        [tail (cddr expression)])
-    (if (null? variables)
-        tail
-        (cons (list 'let (car variables)) (let*->let (list (car expression) (cdr variables) tail))))))
+  (let*->let-aux (cadr expression) (cddr expression)))
+
+(define (let*->let-aux definitions body-expressions)
+  (cond [(null? definitions) body-expressions]
+        [(eq? (length definitions) 1) (cons 'let (cons (list (car definitions)) (let*->let-aux (cdr definitions) body-expressions)))]
+        [else (list 'let (list (car definitions)) (let*->let-aux (cdr definitions) body-expressions))]))
+
 
 (provide squares
          map-squares
