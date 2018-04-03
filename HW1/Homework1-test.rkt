@@ -37,3 +37,9 @@
 (check-eq? (ascending '(1 3 5 7 1200)) #t "Ascending List")
 (check-eq? (ascending '(190 7 3 1)) #f "Strictly Descending")
 (check-eq? (ascending '(1 2 3 5 9 7)) #f "PArtially Ascending, Partially Descending")
+
+(check-equal? (let*->let '(let* ([x 3] [y 4]) (+ x y))) '(let ((x 3)) (let ((y 4)) (+ x y))))
+(check-equal? (eval (let*->let '(let* ([x 3] [y 4]) (+ x y))) (make-base-namespace)) 7)
+(check-equal? (let*->let '(let* ([x 3] [y 4]) (+ x y) (* x y))) '(let ((x 3)) (let ((y 4)) (+ x y)(* x y))))
+(check-equal? (eval (let*->let '(let* ([x 3] [y 4]) (+ x y) (* x y))) (make-base-namespace)) 12)
+(check-equal? (let*->let '(let* ([x 0]))) '(let ((x 0))))

@@ -1,50 +1,27 @@
 #lang racket
 
-(define (squares-1 list)
-  (cond
-    [(eq? list '()) list]
-    [else (cons (* (car list) (car list)) (squares (cdr list)))]))
-
-(define (squares-2 list)
-  (if (eq? list '())
-    list
-    (cons (* (car list) (car list)) (squares (cdr list)))))
-
 ;;; function that takes a list of numbers and returns a new list of the squares of those numbers
-(define (squares list)
-  (if (null? list)
-    list
-    (let([head (car list)]
-         [tail (cdr list)])
-      (cons (* head head) (squares tail)))))
+(define (squares numbers)
+  (if (null? numbers)
+    null
+    (let([head (car numbers)])
+      (cons (* head head) (squares (cdr numbers))))))
 
 ;;; function that takes a list of numbers and returns a new list of the squares of those numbers
 ;;; using map and an anonymous function
-(define (map-squares list)
-  (map (lambda (x) (* x x)) list))
+(define (map-squares numbers)
+  (map (lambda (x) (* x x)) numbers))
 
-;;; non-tail-recursive function that tests whether a list of integers is in strict ascending order
-(define (ascending-1 list)
-  (or (null? list) (eq? (length list) 1) (and (< (car list) (cadr list)) (ascending-1 (cdr list)))))
+;;; non-tail-recursive function that tests whether a list of integers is in strictly ascending order
+(define (ascending numbers)
+  (or (null? numbers) (eq? (length numbers) 1) (and (< (car numbers) (cadr numbers)) (ascending (cdr numbers)))))
 
-;;; tail-recursive function that tests whether a list of integers is in strict ascending order
-(define (ascending list)
-  (cond [(null? list) #t]
-        [(eq? (length list) 1) #t]
-        [(>= (car list) (cadr list)) #f]
-        [else (ascending (cdr list))]))
-
-
-(define (let*->let-1 expression)
-  (let* ([variables (cadr expression)]
-        [modified-expression (cons (car expression) (cons (cdr variables) (cddr expression)))])
-    (cond [(null? variables) null]
-          [(eq? (length variables) 1) (cons 'let (cons (list (car variables)) (let*->let-1 modified-expression)))]
-          [else (list 'let (list (car variables)) (let*->let-1 modified-expression))])))
-
+;;; function that takes a list represneting a let* expression and returns a new list represneting the
+;;; equvelent expression using let
 (define (let*->let expression)
   (let*->let-aux (cadr expression) (cddr expression)))
 
+;;; auxiliary funciton that 
 (define (let*->let-aux definitions body-expressions)
   (cond [(null? definitions) body-expressions]
         [(eq? (length definitions) 1) (cons 'let (cons (list (car definitions)) (let*->let-aux (cdr definitions) body-expressions)))]
@@ -53,4 +30,6 @@
 
 (provide squares
          map-squares
-         ascending)
+         ascending
+         let*->let
+         let*->let-aux)
