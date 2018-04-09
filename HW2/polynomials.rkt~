@@ -1,0 +1,13 @@
+#lang racket
+(define (poly-multiply left right)
+  (simplify (poly-multiply-expanded))
+
+(define (poly-multiply-expanded left right)
+  (if (or (null? left) (null? right))
+      left
+      (poly-multiply-expanded (map basic-multiply left (car right)) (cdr right))))
+
+(define (basic-multiply left right)
+  (list (* (car left) (car right)) (+ (cdr left) (cdr right))))
+  
+      
