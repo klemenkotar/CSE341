@@ -103,7 +103,6 @@
      (eval '(define x 4) ns)
      (check-equal? (eval (poly->code (poly-multiply p1 p2) 'x) ns) 255)
      (check-equal? (* (eval (poly->code p1 'x) ns) (eval (poly->code p2 'x ) ns) ) 255))
-
 ))
   
 (require rackunit/text-ui)
