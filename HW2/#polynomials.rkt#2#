@@ -1,0 +1,83 @@
+#lang racket
+
+;;; PROBLEM 1
+;; Function that takes two polynomials in a symbolic variable and returns their product
+(define (poly-multiply left right)
+  (poly-reduce (poly-simplify (poly-sort (poly-expand left right)))))
+
+;; multiplies out the terms of the two polynomials given
+(define (poly-expand left right)
+  (if (or (null? left) (null? right))
+      null
+      (append (map (curry basic-multiply (car right)) left)
+              (poly-expand left (cdr right)))))
+
+;; multiplies two polynomial terms
+(define (basic-multiply a b)
+  (list (* (coefficient a) (coefficient b)) (+ (exponent a) (exponent b))))
+
+;; sorts a polynomial in order of descending exponents
+(define (poly-sort polynomial)
+  (sort polynomial #:key exponent >))
+
+;; combines like terms in a given polynomial
+(define (poly-simplify poly)
+  (if (or (null? poly) (eq? (length poly) 1))
+      poly
+      (let ([first (car poly)]
+            [second (cadr poly)])
+        (if (eq? (exponent first) (exponent second))
+            (poly-simplify (cons
+                            (list (+ (coefficient first) (coefficient second)) (exponent first))
+                            (cddr poly)))
+            (cons first (poly-simplify (cdr poly)))))))
+
+;; removes all terms with coefficient 0 from a polynomial
+(define (poly-reduce poly)
+  (filter (lambda (x) (not (eq? (coefficient x) 0))) poly))
+
+;; acess functions
+
+;; get the coefficient of a polynomial term
+(define (coefficient term)
+  (car term))
+;; get the exponent of a polynomial term
+(define (exponent term)
+  (cadr term))
+
+;;; PROBLEM 2
+(define (poly->code poly var)
+  (cond [(null? poly) 0]
+        [(one-term? poly) (list '*
+                                      (coefficient poly)
+                                      (list 'expt (var (exponent var))))]
+        [else (list '+ (poly->code (car var)) (poly->code (cdr var)))]))
+
+(define (one-term? poly)
+  
+
+;;; UNIT TESTS
+(require rackunit)
+
+(define polynomial-tests 
+  (test-suite
+   "Tests for Polynomial functions"
+
+  (check-equal? (poly-multiply '() '()) '() "Two empty polynomails")
+  (check-equal? (poly-multiply '((-3 4) (1 1) (5 0)) '()) '() "Second polynomial is empty")
+  (check-equal? (poly-multiply '() '((1 2))) '() "First polynomial is empty")
+  (check-equal? (poly-multiply '((3 0)) '((1 1))) '((3 1)) "Simple multiplication")
+  (check-equal? (poly-multiply '((1 1)) '((3 0))) '((3 1)) "Commutative property test")
+  (check-equal? (poly-multiply '((1 3) (1 1) (-1 0)) '((-5 0)))
+                '((-5 3) (-5 1) (5 0)) "Scala multiplication")
+  (check-equal? (poly-multiply '((1 3) (1 2) (1 1) (1 0)) '((1 1) (-1 0)))
+                '((1 4) (-1 0)) "Simple polynomial")
+  (check-equal? (poly-multiply '((-10 2) (100 1) (5 0)) '((1 999) (-1 7) (1 1) (3 0)))
+                '((-10 1001) (100 1000) (5 999) (10 9) (-100 8) (-5 7) (-10 3) (70 2) (305 1) (15 0))
+                "Long polynomials")
+))
+
+  
+(require rackunit/text-ui)
+;; this line runs the tests ....
+(run-tests polynomial-tests )
