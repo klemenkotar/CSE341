@@ -1,0 +1,7 @@
+factorial :: Integer -> Integer
+factorial n = product [1..n]
+
+integral :: (Double -> Double) -> Double -> Double -> Double
+integral f lower upper = 0.00001 * (sum $ map f [lower, lower + 0.00001 .. upper])
+
+

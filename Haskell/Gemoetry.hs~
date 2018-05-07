@@ -1,0 +1,11 @@
+module Gemoetry
+  ( sphereVolume
+  , sphereArea
+  , cubeVolume
+  , cubeArea
+  , cuboidVolume
+  , cuboidArea
+  ) where
+
+sphereVolume :: (Num a) => a -> a
+sphereVolume = (*pi) . (^2)

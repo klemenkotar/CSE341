@@ -1,0 +1,22 @@
+maximum' :: (Ord a) => [a] -> a
+maximum' [] = error "Can not get maximum of an empty list"
+maximum' [x] = x
+maximum'(x:xs)
+  | x > maxTail = x
+  | otherwise   = maxTail
+  where maxTail = maximum' xs
+
+replicate' :: (Num i, Ord i) => i -> a -> [a]
+replicate' n a
+  | n <= 0    = []
+  | otherwise = a:replicate' (n-1) a
+
+take' :: (Num i, Ord i) => i -> [a] -> [a]
+take' i _
+  | i <= 0     = []
+take' _ []     = []
+take' i (x:xs) = x:take' (i-1) xs
+
+reverse' :: [a] -> [a]
+reverse' [] = []
+reverse' (x:xs) = reverse' xs ++ [x]
