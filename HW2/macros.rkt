@@ -1,4 +1,5 @@
 #lang racket
+
 ;;; PROBLEM 3
 ;; Struct used to store the value of delayed evaluations once they are forced
 (struct delay-holder (is-evaluated value) #:transparent #:mutable)
@@ -33,6 +34,8 @@
   (test-suite
    "Tests for Polynomial functions"
    ;; Unit tests for my-delay macro
+   ;; check that my-delay does not evaluate the its arguments
+   ;; and that my-force evaluates them only the first time
    (let ([x 0])
      (define f (my-delay (set! x (+ x 1)) '(Evaluated!)))
      (check-equal? x 0 "Check if f was delayed")
@@ -60,8 +63,7 @@
    (check-equal? (my-and #t #f) #f "Two argument false")
    (check-equal? (my-and 'squid #t) #t "Two arguments true")
    (check-equal? (my-and #t (eq? 1 1) 4) 4 "Three argument number")
-   (check-equal? (my-and 'squid 'clam 'starfish 'octopus 'anemone) 'anemone "Multiple arguments atom")
-))
+   (check-equal? (my-and 'squid 'clam 'starfish 'octopus 'anemone) 'anemone "Multiple arguments atom")))
 
 (require rackunit/text-ui)
 ;; this line runs the tests

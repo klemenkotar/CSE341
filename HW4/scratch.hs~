@@ -1,0 +1,6 @@
+fun :: a --> [a] -> a
+fun x y -> case a:[a] of
+  [e, f] -> e + f
+  [] -> 0
+  
+  

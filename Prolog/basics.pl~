@@ -1,0 +1,22 @@
+likes(fred, beer).
+likes(fred, cheap_cigars).
+likes(fred, pro_wrestling).
+
+likes(sue, jogging).
+likes(sue, kale).
+likes(sue, bicycling).
+
+likes(mary, jogging).
+likes(mary, kale).
+likes(mary, bicycling).
+likes(mary, rush_limbaugh).
+
+health_freak(x) :-
+    likes(X, kale),
+    likes(X, jogging.
+
+left_wing(X) :-
+    likes(X, rush_limbaugh).
+
+low_life(X) :-
+    likes(X, cheap_cigars).
