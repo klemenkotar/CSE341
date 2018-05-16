@@ -47,9 +47,24 @@ test(dequeue) :-
 :- end_tests(question2).
 
 :- begin_tests(question4).
+test(grandmother) :- grandmother('Martha', 'Haakon').
+test(grandmother, [fail]) :- grandmother('Haakon VII', 'Harald V').
+test(grandmother, ['Harald V']) :- grandmother('Maud',G), G = 'Harald V'.
+test(son) :- son('Haakon', 'Sonja').
+test(ancestor) :- ancestor('Haakon VII', 'Haakon').
+test(ancestor) :- ancestor('Sonja', 'Haakon').
+:- end_tests(question2).
+
+:- begin_tests(question4).
 /* First a nondeterministic test of one path: */
-test(maze, [nondet]) :- path(allen_basement, ave, 
-     [allen_basement, atrium, hub, odegaard, ave], 200).
+test(maze, [nondet]) :- path(allen_basement, ave,
+			     [allen_basement, atrium, hub, odegaard, ave], 200).
+/* A test for an impossible path that fails */
+test(maze, [fail]) :- path(ave, allen_basement, _, _).
+/* A test for when the start and finish are the same */
+test(maze, [nondet]) :- path(ave, ave, [ave], 0).
+/* A test for a path to a destination that does not exist causing it to fail */
+test(maxe, [fail]) :- path(hub, suzallo, _, _).
 /* A test for all of the costs for the 4 possible paths 
    (ignoring the route).  We use 'set' rather than 'all' so that 
    it doesn't matter what order the results come back. */
@@ -65,7 +80,13 @@ test(maze, set(Soln==[
    solution([allen_basement, atrium, hub, red_square, ave],195),
    solution([allen_basement, atrium, hub, red_square, odegaard, ave],210) 
    ])) :-
-   path(allen_basement, ave, S, C), Soln = solution(S,C).
+    path(allen_basement, ave, S, C), Soln = solution(S,C).
+/* Another exhaustive test featuring multiple possible paths */
+test(maze, set(Solns==[
+   solution([hub, odegaard], 140),
+   solution([hub, red_square, odegaard], 150)
+   ])) :-
+    path(hub, odegaard, S, C), Soln = solution(S,C).
 :- end_tests(question4).
 
 :- begin_tests(question6).
