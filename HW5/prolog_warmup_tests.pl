@@ -1,5 +1,4 @@
-/* unit tests for HW 5, Prolog Warmup, CSE 341, Spring 2018 */
-
+/* Klemen Kotar, CSE 341 Section AA, Unit tests for HW 5 - Prolog Warmup, May 7, 2018 */
 
 /* read in a file prolog_warmup.pl (so you should call your homework this!) */
 :- consult(prolog_warmup).
@@ -25,7 +24,10 @@ to fail.  So the test succeeds if that goal fails. */
 
 test(sentence, [nondet]) :- sentence(all,dolphins,frolic).
 test(sentence, [nondet]) :- sentence(few,clams,dream).
+test(sentence, [nondet]) :- sentence(all,sharks,dream).
+test(sentence, [nondet]) :- sentence(some,clams,frolic).
 test(sentence, [fail]) :- sentence(few,clams,fly).
+test(sentence, [fail]) :- sentence(vote,all,sharks).
 
 :- end_tests(hw5).
 

@@ -16,6 +16,36 @@ test(average,  [fail]) :- average([],_).
 :- end_tests(question1).
 
 
+:- begin_tests(question2).
+test(enqueue) :- enqueue([1,2,3,4],5,[1,2,3,4,5]).
+test(enqueue) :- enqueue([],"Octopus",["Octopus"]).
+test(enqueue) :- enqueue(["List"],["One", "Two"],["List",["One", "Two"]]).
+test(enqueue) :- enqueue([a,b],c,[a,b,c]).
+test(enqueue, [fail]) :- enqueue("Word", ["List","Of","Words"],_).
+test(dequeue) :- dequeue([1,2,3,4],1,[2,3,4]).
+test(dequeue) :- dequeue([squid, tree, bird], squid, [tree, bird]).
+test(dequeue) :- dequeue([42],42,[]).
+test(dequeue, [fail]) :- dequeue([],_,_).
+test(dequeue, [fail]) :- dequeue(12,_,_).
+test(head) :- head([1,2,3],1).
+test(head) :- head([a],a).
+test(head, [fail]) :- head([],_).
+test(head, [fail]) :- head(12,_).
+test(empty) :- empty([]).
+test(empty) :- A = [], empty[A].
+test(empty, [fail]) :- empty[12].
+test(dequeue) :-
+    empty(Q1),
+    enqueue(Q1,squid,Q2),
+    enqueue(Q2,clam,Q3),
+    dequeue(Q3,X,Q4),
+    Q1 = [],
+    Q2 = [squid],
+    Q3 = [squid, clam],
+    Q4 = [clam],
+    X = squid.
+:- end_tests(question2).
+
 :- begin_tests(question4).
 /* First a nondeterministic test of one path: */
 test(maze, [nondet]) :- path(allen_basement, ave, 

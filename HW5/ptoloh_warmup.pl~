@@ -1,0 +1,8 @@
+/* Klemen Kotar, CSE 341 Section AA, HW5 - Prolog Warmup, May 7, 2018 */
+
+/* Probelm 1 - repeat */
+/* This rule suceeds if the second argument is a list with only 0 or 
+more occurences of the first argument */
+repeat(_,[]).
+repeat(X,[X|Xs]) :-
+    repeat(X,Xs)
