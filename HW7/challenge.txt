@@ -1,0 +1,10 @@
+For the challenge portion I upgraded the game in several ways, here is the rundown:
+
+STYLE
+-Increased game and block size to make it last longer + be more visible
+-Moved around buttons and increased Socre counter to improve the UI a bit
+-Added a message feature that reports new points that were awarded and cheats that were activated
+
+GAME ELEMENTS
+-Added new "Bomb Cheat", which lets you pay 500 points in exchange for your next piece becoming a bomb
+-The bomb piece will blow up a 5x5 square of blocks around the bomb blocks when it lands

@@ -10,12 +10,14 @@ move the boundary as you get more things working.
 /* read in a file hw6.pl (so you should call your homework this!) */
 :- consult(hw6).
 
+/* QUESTION 1 TESTS */
 :- begin_tests(question1).
-test(average) :- average([1,2,3,4,5],3).
+test(average, all(A==[3])) :- average([1,2,3,4,5],A).
 test(average,  [fail]) :- average([],_).
 :- end_tests(question1).
 
 
+/* QUESTION 2 TESTS */
 :- begin_tests(question2).
 test(enqueue) :- enqueue([1,2,3,4],5,[1,2,3,4,5]).
 test(enqueue) :- enqueue([],"Octopus",["Octopus"]).
@@ -32,8 +34,7 @@ test(head) :- head([a],a).
 test(head, [fail]) :- head([],_).
 test(head, [fail]) :- head(12,_).
 test(empty) :- empty([]).
-test(empty) :- A = [], empty[A].
-test(empty, [fail]) :- empty[12].
+test(empty, [fail]) :- empty([12]).
 test(dequeue) :-
     empty(Q1),
     enqueue(Q1,squid,Q2),
@@ -46,15 +47,24 @@ test(dequeue) :-
     X = squid.
 :- end_tests(question2).
 
-:- begin_tests(question4).
-test(grandmother) :- grandmother('Martha', 'Haakon').
-test(grandmother, [fail]) :- grandmother('Haakon VII', 'Harald V').
-test(grandmother, ['Harald V']) :- grandmother('Maud',G), G = 'Harald V'.
-test(son) :- son('Haakon', 'Sonja').
-test(ancestor) :- ancestor('Haakon VII', 'Haakon').
-test(ancestor) :- ancestor('Sonja', 'Haakon').
-:- end_tests(question2).
 
+/* QUESTION 3 TESTS */
+:- begin_tests(question3).
+test(grandmother, all(M==['Martha'])) :- grandmother(M, 'Haakon').
+test(grandmother, [fail]) :- grandmother('Haakon VII', 'Harald V').
+test(grandmother, all(G==['Harald V'])) :- grandmother('Maud',G).
+test(grandmother, all(G==['Maud'])) :- grandmother(G, 'Harald V').
+test(son) :- son('Haakon', 'Sonja').
+test(son, all(S==['Olav V'])) :- son(S, 'Haakon VII').
+test(son, set(P==['Olav V', 'Martha'])) :- son('Harald V', P).
+test(ancestor, set(P==['Olav V','Harald V','Haakon'])) :- ancestor('Haakon VII', P).
+test(ancestor, set(A==[
+  'Sonja', 'Harald V', 'Martha', 'Olav V', 'Maud', 'Haakon VII'
+  ])) :- ancestor(A, 'Haakon').
+:- end_tests(question3).
+
+
+/* QUESTION 4 TESTS */
 :- begin_tests(question4).
 /* First a nondeterministic test of one path: */
 test(maze, [nondet]) :- path(allen_basement, ave,
@@ -82,13 +92,43 @@ test(maze, set(Soln==[
    ])) :-
     path(allen_basement, ave, S, C), Soln = solution(S,C).
 /* Another exhaustive test featuring multiple possible paths */
-test(maze, set(Solns==[
+test(maze, set(Soln==[
    solution([hub, odegaard], 140),
    solution([hub, red_square, odegaard], 150)
    ])) :-
     path(hub, odegaard, S, C), Soln = solution(S,C).
 :- end_tests(question4).
 
+
+/* QUESTION 5 TESTS */
+:- begin_tests(question5).
+test(const) :- deriv(3,x,0).
+test(x) :- deriv(x,x,1).
+test(y) :- deriv(y,x,0).
+test(plus) :- deriv(x+3,x,1).
+test(plus) :- deriv(x+y,x,1).
+test(plus_unsimp) :- deriv((2+3)*x,x,5).
+test(times) :- deriv( 10*(x+3), x, 10).
+test(times) :- deriv( (x*y)*(x+3), x, (x*y)+(y*(x+3))).
+test(minus) :- deriv( (2-x), x, -1).
+test(minus) :- deriv( ((14*x) - (12*x) + (2*x)), x, 4).
+test(minus) :- deriv( ((7*x) - (2*y)), x, 7).
+test(sin) :- deriv( sin(x), x, cos(x)).
+test(sin) :- deriv( (sin(12*x) - sin(x)), x, 12*cos(12*x)-cos(x)).
+test(sin) :- deriv( sin(12), x, 0).
+test(cos) :- deriv( cos(x), x, -sin(x)).
+test(cos) :- deriv( cos(0), x, 0).
+test(exp) :- deriv( x^12, x, 12*x^11).
+test(exp) :- deriv( 12*(x^2), x, 12*(2*x) ).
+test(exp) :- deriv( (x^0), x, 0).
+test(complex) :- deriv( ((sin((x^2) + (12*x)))^12), x, 
+  (12*sin(x^2+12*x)^11*((2*x+12)*cos(x^2+12*x))) ).
+test(complex) :- deriv( (sin(cos(sin(x^2))))^5, x, 
+  5*sin(cos(sin(x^2)))^4*(- (2*x*cos(x^2))*sin(sin(x^2))*cos(cos(sin(x^2))))).
+:- end_tests(question5).
+
+
+/* QUESTION 6 TESTS */
 :- begin_tests(question6).
 /* to avoid roundoff errors, these tests check whether the actual answer is 
    within 0.01 of the expected answer */
